@@ -1,5 +1,6 @@
 package com.nh.tarotapp
 
+import android.net.Uri
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -11,8 +12,10 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.view.View
+import androidx.fragment.app.FragmentTransaction
 
-class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +70,10 @@ class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_home -> {
                 // Handle the camera action
+                var home = HomeFragment();
+                supportFragmentManager.beginTransaction().replace(R.id.container, home)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
             }
             R.id.nav_gallery -> {
 
@@ -87,5 +94,9 @@ class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onFragmentInteraction(uri: Uri) {
+        //you can leave it empty
     }
 }
