@@ -1,15 +1,19 @@
 package com.nh.tarotapp
 
+import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_daily_tarot.*
+import kotlinx.android.synthetic.main.fragment_tarot_reading.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -20,48 +24,31 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [HomeFragment.OnFragmentInteractionListener] interface
+ * [TarotReadingFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [HomeFragment.newInstance] factory method to
+ * Use the [TarotReadingFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class HomeFragment : Fragment(), DailyTarotFragment.OnFragmentInteractionListener {
+class TarotReadingFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var cards: ArrayList<Drawable> = ArrayList<Drawable>()
     private var listener: OnFragmentInteractionListener? = null
-    private var recyclerView: RecyclerView? = null
-    private var dataSet : MutableList<ItemList> = mutableListOf<ItemList>();
-
-
+    private var deckList:MutableList<Card> = mutableListOf<Card>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-        for (i in 1..3){
-           var item = ItemList("Tirada a una carta","kjnkjnkjnj","",i)
-            dataSet.add(item)
+            cards = it.getSerializable("cards") as ArrayList<Drawable>
         }
 
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-        recyclerView = view.findViewById<RecyclerView>(R.id.optionsList).apply{
-            layoutManager = LinearLayoutManager(context)
-            adapter = ItemListAdapter(dataSet){ item ->
-                if(item.id==3){
-                    var dailyTarot = DailyTarotFragment();
-                    getFragmentManager()?.beginTransaction()?.replace(R.id.container, dailyTarot)?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)?.commit()
-                }
-            }
+        Log.d("cards", cards.size.toString())
+        for(i in cards){
+            val c = Card(i,1,getString(R.string.lorem))
+            deckList.add(c)
         }
+
 
     }
 
@@ -70,22 +57,19 @@ class HomeFragment : Fragment(), DailyTarotFragment.OnFragmentInteractionListene
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
-
+        return inflater.inflate(R.layout.fragment_tarot_reading, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        cardsView.apply{
+            layoutManager = LinearLayoutManager(context)
+            adapter = CardDetailsAdapter(deckList)
+        }
+    }
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
     }
 
     override fun onDetach() {
@@ -116,20 +100,16 @@ class HomeFragment : Fragment(), DailyTarotFragment.OnFragmentInteractionListene
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
+         * @return A new instance of fragment TarotReadingFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
+            TarotReadingFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
             }
-    }
-
-    override fun onFragmentInteraction(uri: Uri) {
-        //you can leave it empty
     }
 }
