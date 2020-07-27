@@ -28,8 +28,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment(), DailyTarotFragment.OnFragmentInteractionListener {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val names = arrayOf("Tirada a un carta","Tirada clásica","El camino")
     private var listener: OnFragmentInteractionListener? = null
     private var recyclerView: RecyclerView? = null
     private var dataSet : MutableList<ItemList> = mutableListOf<ItemList>();
@@ -37,12 +36,9 @@ class HomeFragment : Fragment(), DailyTarotFragment.OnFragmentInteractionListene
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-        for (i in 1..3){
-           var item = ItemList("Tirada a una carta","kjnkjnkjnj","",i)
+
+        for (i in 0..2){
+           var item = ItemList(names[i],getString(R.string.lorem),"",i)
             dataSet.add(item)
         }
 
@@ -56,7 +52,7 @@ class HomeFragment : Fragment(), DailyTarotFragment.OnFragmentInteractionListene
         recyclerView = view.findViewById<RecyclerView>(R.id.optionsList).apply{
             layoutManager = LinearLayoutManager(context)
             adapter = ItemListAdapter(dataSet){ item ->
-                if(item.id==3){
+                if(item.id==2){
                     var dailyTarot = DailyTarotFragment();
                     getFragmentManager()?.beginTransaction()?.replace(R.id.container, dailyTarot)?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)?.commit()
                 }

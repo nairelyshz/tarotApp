@@ -15,6 +15,7 @@ class CardDetailsAdapter(private val cards: List<Card>): RecyclerView.Adapter<Ca
         fun bind(item: Card ) {
             itemView.image.setImageDrawable(item.image)
             itemView.description.text = item.description
+            itemView.name.text = item.name
         }
     }
 

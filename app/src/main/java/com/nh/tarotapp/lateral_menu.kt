@@ -2,8 +2,6 @@ package com.nh.tarotapp
 
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -33,7 +31,10 @@ class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+
         navView.setNavigationItemSelectedListener(this)
+        navView.setCheckedItem(R.id.nav_home)
+        showTarotMenu()
     }
 
 
@@ -61,16 +62,18 @@ class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> super.onOptionsItemSelected(item)
         }
     }
-
+    fun showTarotMenu(){
+        var home = HomeFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.container, home)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .commit()
+    }
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
                 // Handle the camera action
-                var home = HomeFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.container, home)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit()
+                showTarotMenu()
             }
             R.id.nav_gallery -> {
 
@@ -96,4 +99,6 @@ class lateral_menu : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onFragmentInteraction(uri: Uri) {
         //you can leave it empty
     }
+
+
 }
